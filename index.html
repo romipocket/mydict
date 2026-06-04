@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="theme-color" content="#007AFF">
+    <title>MyDict - Diccionario & Flashcards</title>
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect fill='%23007AFF' width='180' height='180' rx='36'/%3E%3Ctext x='90' y='115' font-size='80' text-anchor='middle' fill='white'%3E📘%3C/text%3E%3C/svg%3E">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div id="app">
+        <!-- Pantalla de Inicio / Buscador -->
+        <div class="screen active" id="screen-search">
+            <header class="app-header">
+                <h1>📘 MyDict</h1>
+            </header>
+            <div class="search-container">
+                <div class="search-box">
+                    <input type="text" id="search-input" placeholder="Buscar palabra en inglés..." autocomplete="off">
+                    <button id="search-btn">🔍</button>
+                </div>
+            </div>
+            <div id="search-results" class="results-container"></div>
+        </div>
+
+        <!-- Pantalla de Mis Grupos -->
+        <div class="screen" id="screen-groups">
+            <header class="app-header">
+                <h1>Mis Grupos</h1>
+                <div style="display:flex; gap:8px;">
+                    <button class="btn-icon" id="btn-backup" title="Respaldo">⚙️</button>
+                    <button class="btn-icon" id="btn-new-group">＋</button>
+                </div>
+            </header>
+            <div class="groups-list" id="groups-list"></div>
+            <div class="backup-actions" id="backup-actions" style="display:none;"></div>
+            
+            <div class="modal" id="modal-new-group">
+                <div class="modal-content">
+                    <h3>Nuevo Grupo</h3>
+                    <input type="text" id="new-group-name" placeholder="Nombre del grupo (ej: Libro - Cap 1)">
+                    <div class="modal-buttons">
+                        <button class="btn-secondary" id="btn-cancel-group">Cancelar</button>
+                        <button class="btn-primary" id="btn-create-group">Crear</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pantalla de Detalle de Grupo -->
+        <div class="screen" id="screen-group-detail">
+            <header class="app-header">
+                <button class="btn-back" id="btn-back-from-group">←</button>
+                <h1 id="group-detail-title">Grupo</h1>
+                <button class="btn-icon" id="btn-study-group">📖</button>
+            </header>
+            <div class="words-list" id="words-list"></div>
+        </div>
+
+        <!-- Pantalla de Flashcards -->
+        <div class="screen" id="screen-flashcards">
+            <header class="app-header">
+                <button class="btn-back" id="btn-back-from-flashcards">←</button>
+                <h1>Flashcards</h1>
+            </header>
+            <div class="flashcard-container">
+                <div class="progress-bar">
+                    <div class="progress-fill" id="flashcard-progress"></div>
+                </div>
+                <div class="progress-text" id="flashcard-progress-text">1 / 10</div>
+                
+                <div class="flashcard" id="flashcard">
+                    <div class="flashcard-inner">
+                        <div class="flashcard-front">
+                            <div class="flashcard-word" id="flashcard-word">Word</div>
+                            <div class="flashcard-hint">Toca para ver significado</div>
+                        </div>
+                        <div class="flashcard-back">
+                            <div class="flashcard-definition" id="flashcard-definition">Definición</div>
+                            <div class="flashcard-translation" id="flashcard-translation">Traducción</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="flashcard-controls">
+                    <button class="btn-flashcard btn-hard" id="btn-hard">❌ Difícil</button>
+                    <button class="btn-flashcard btn-easy" id="btn-easy">✅ Fácil</button>
+                </div>
+                <div class="flashcard-finished" id="flashcard-finished" style="display:none;">
+                    <h2>🎉 ¡Completado!</h2>
+                    <p>Has terminado todas las flashcards de este grupo.</p>
+                    <button class="btn-primary" id="btn-restart-flashcards">Empezar de nuevo</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pantalla de Añadir a Grupo -->
+        <div class="modal" id="modal-add-to-group">
+            <div class="modal-content">
+                <h3>Guardar en grupo</h3>
+                <div id="add-group-list" class="add-group-list"></div>
+                <button class="btn-secondary btn-full" id="btn-cancel-add">Cancelar</button>
+            </div>
+        </div>
+
+        <!-- Modal Exportar/Importar -->
+        <div class="modal" id="modal-backup">
+            <div class="modal-content">
+                <h3>Respaldo de datos</h3>
+                <p style="font-size:14px; color:var(--text-secondary); margin-bottom:16px; text-align:center;">Guarda tus listas en un archivo para usar en otro dispositivo.</p>
+                <div class="backup-buttons">
+                    <button class="btn-backup btn-export" id="btn-export">📤 Exportar mis listas</button>
+                    <button class="btn-backup btn-import" id="btn-import">📥 Importar listas</button>
+                </div>
+                <button class="btn-secondary btn-full" id="btn-cancel-backup" style="margin-top:8px;">Cerrar</button>
+                <input type="file" id="import-file" accept=".json" style="display:none;">
+            </div>
+        </div>
+
+        <!-- Barra de navegación inferior -->
+        <nav class="bottom-nav" id="bottom-nav">
+            <button class="nav-btn active" data-screen="screen-search">
+                <span class="nav-icon">🔍</span>
+                <span class="nav-label">Buscar</span>
+            </button>
+            <button class="nav-btn" data-screen="screen-groups">
+                <span class="nav-icon">📚</span>
+                <span class="nav-label">Grupos</span>
+            </button>
+        </nav>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
