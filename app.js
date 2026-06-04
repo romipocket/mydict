@@ -37,6 +37,228 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => showScreen(btn.dataset.screen));
 });
 
+// === CONJUGATION HELPERS ===
+const IRREGULAR_VERBS = {
+    'be': { past: 'was/were', participle: 'been', third: 'is', gerund: 'being' },
+    'have': { past: 'had', participle: 'had', third: 'has', gerund: 'having' },
+    'do': { past: 'did', participle: 'done', third: 'does', gerund: 'doing' },
+    'go': { past: 'went', participle: 'gone', third: 'goes', gerund: 'going' },
+    'come': { past: 'came', participle: 'come', third: 'comes', gerund: 'coming' },
+    'see': { past: 'saw', participle: 'seen', third: 'sees', gerund: 'seeing' },
+    'know': { past: 'knew', participle: 'known', third: 'knows', gerund: 'knowing' },
+    'get': { past: 'got', participle: 'got/gotten', third: 'gets', gerund: 'getting' },
+    'make': { past: 'made', participle: 'made', third: 'makes', gerund: 'making' },
+    'take': { past: 'took', participle: 'taken', third: 'takes', gerund: 'taking' },
+    'think': { past: 'thought', participle: 'thought', third: 'thinks', gerund: 'thinking' },
+    'say': { past: 'said', participle: 'said', third: 'says', gerund: 'saying' },
+    'tell': { past: 'told', participle: 'told', third: 'tells', gerund: 'telling' },
+    'become': { past: 'became', participle: 'become', third: 'becomes', gerund: 'becoming' },
+    'leave': { past: 'left', participle: 'left', third: 'leaves', gerund: 'leaving' },
+    'feel': { past: 'felt', participle: 'felt', third: 'feels', gerund: 'feeling' },
+    'put': { past: 'put', participle: 'put', third: 'puts', gerund: 'putting' },
+    'bring': { past: 'brought', participle: 'brought', third: 'brings', gerund: 'bringing' },
+    'begin': { past: 'began', participle: 'begun', third: 'begins', gerund: 'beginning' },
+    'keep': { past: 'kept', participle: 'kept', third: 'keeps', gerund: 'keeping' },
+    'hold': { past: 'held', participle: 'held', third: 'holds', gerund: 'holding' },
+    'write': { past: 'wrote', participle: 'written', third: 'writes', gerund: 'writing' },
+    'stand': { past: 'stood', participle: 'stood', third: 'stands', gerund: 'standing' },
+    'hear': { past: 'heard', participle: 'heard', third: 'hears', gerund: 'hearing' },
+    'let': { past: 'let', participle: 'let', third: 'lets', gerund: 'letting' },
+    'mean': { past: 'meant', participle: 'meant', third: 'means', gerund: 'meaning' },
+    'set': { past: 'set', participle: 'set', third: 'sets', gerund: 'setting' },
+    'meet': { past: 'met', participle: 'met', third: 'meets', gerund: 'meeting' },
+    'run': { past: 'ran', participle: 'run', third: 'runs', gerund: 'running' },
+    'pay': { past: 'paid', participle: 'paid', third: 'pays', gerund: 'paying' },
+    'sit': { past: 'sat', participle: 'sat', third: 'sits', gerund: 'sitting' },
+    'speak': { past: 'spoke', participle: 'spoken', third: 'speaks', gerund: 'speaking' },
+    'lie': { past: 'lay', participle: 'lain', third: 'lies', gerund: 'lying' },
+    'lead': { past: 'led', participle: 'led', third: 'leads', gerund: 'leading' },
+    'read': { past: 'read', participle: 'read', third: 'reads', gerund: 'reading' },
+    'grow': { past: 'grew', participle: 'grown', third: 'grows', gerund: 'growing' },
+    'lose': { past: 'lost', participle: 'lost', third: 'loses', gerund: 'losing' },
+    'fall': { past: 'fell', participle: 'fallen', third: 'falls', gerund: 'falling' },
+    'send': { past: 'sent', participle: 'sent', third: 'sends', gerund: 'sending' },
+    'build': { past: 'built', participle: 'built', third: 'builds', gerund: 'building' },
+    'understand': { past: 'understood', participle: 'understood', third: 'understands', gerund: 'understanding' },
+    'draw': { past: 'drew', participle: 'drawn', third: 'draws', gerund: 'drawing' },
+    'break': { past: 'broke', participle: 'broken', third: 'breaks', gerund: 'breaking' },
+    'spend': { past: 'spent', participle: 'spent', third: 'spends', gerund: 'spending' },
+    'cut': { past: 'cut', participle: 'cut', third: 'cuts', gerund: 'cutting' },
+    'rise': { past: 'rose', participle: 'risen', third: 'rises', gerund: 'rising' },
+    'drive': { past: 'drove', participle: 'driven', third: 'drives', gerund: 'driving' },
+    'wear': { past: 'wore', participle: 'worn', third: 'wears', gerund: 'wearing' },
+    'choose': { past: 'chose', participle: 'chosen', third: 'chooses', gerund: 'choosing' },
+    'eat': { past: 'ate', participle: 'eaten', third: 'eats', gerund: 'eating' },
+    'give': { past: 'gave', participle: 'given', third: 'gives', gerund: 'giving' },
+    'find': { past: 'found', participle: 'found', third: 'finds', gerund: 'finding' },
+    'buy': { past: 'bought', participle: 'bought', third: 'buys', gerund: 'buying' },
+    'sell': { past: 'sold', participle: 'sold', third: 'sells', gerund: 'selling' },
+    'teach': { past: 'taught', participle: 'taught', third: 'teaches', gerund: 'teaching' },
+    'sleep': { past: 'slept', participle: 'slept', third: 'sleeps', gerund: 'sleeping' },
+    'swim': { past: 'swam', participle: 'swum', third: 'swims', gerund: 'swimming' },
+    'drink': { past: 'drank', participle: 'drunk', third: 'drinks', gerund: 'drinking' },
+    'sing': { past: 'sang', participle: 'sung', third: 'sings', gerund: 'singing' },
+    'fly': { past: 'flew', participle: 'flown', third: 'flies', gerund: 'flying' },
+    'ring': { past: 'rang', participle: 'rung', third: 'rings', gerund: 'ringing' },
+    'shake': { past: 'shook', participle: 'shaken', third: 'shakes', gerund: 'shaking' },
+    'catch': { past: 'caught', participle: 'caught', third: 'catches', gerund: 'catching' },
+    'fight': { past: 'fought', participle: 'fought', third: 'fights', gerund: 'fighting' },
+    'forget': { past: 'forgot', participle: 'forgotten', third: 'forgets', gerund: 'forgetting' },
+    'forgive': { past: 'forgave', participle: 'forgiven', third: 'forgives', gerund: 'forgiving' },
+    'freeze': { past: 'froze', participle: 'frozen', third: 'freezes', gerund: 'freezing' },
+    'hide': { past: 'hid', participle: 'hidden', third: 'hides', gerund: 'hiding' },
+    'hit': { past: 'hit', participle: 'hit', third: 'hits', gerund: 'hitting' },
+    'hurt': { past: 'hurt', participle: 'hurt', third: 'hurts', gerund: 'hurting' },
+    'lay': { past: 'laid', participle: 'laid', third: 'lays', gerund: 'laying' },
+    'ride': { past: 'rode', participle: 'ridden', third: 'rides', gerund: 'riding' },
+    'shake': { past: 'shook', participle: 'shaken', third: 'shakes', gerund: 'shaking' },
+    'show': { past: 'showed', participle: 'shown', third: 'shows', gerund: 'showing' },
+    'shut': { past: 'shut', participle: 'shut', third: 'shuts', gerund: 'shutting' },
+    'sink': { past: 'sank', participle: 'sunk', third: 'sinks', gerund: 'sinking' },
+    'slide': { past: 'slid', participle: 'slid', third: 'slides', gerund: 'sliding' },
+    'stick': { past: 'stuck', participle: 'stuck', third: 'sticks', gerund: 'sticking' },
+    'strike': { past: 'struck', participle: 'struck', third: 'strikes', gerund: 'striking' },
+    'tear': { past: 'tore', participle: 'torn', third: 'tears', gerund: 'tearing' },
+    'wake': { past: 'woke', participle: 'woken', third: 'wakes', gerund: 'waking' },
+    'beat': { past: 'beat', participle: 'beaten', third: 'beats', gerund: 'beating' },
+    'bend': { past: 'bent', participle: 'bent', third: 'bends', gerund: 'bending' },
+    'bet': { past: 'bet', participle: 'bet', third: 'bets', gerund: 'betting' },
+    'bind': { past: 'bound', participle: 'bound', third: 'binds', gerund: 'binding' },
+    'bite': { past: 'bit', participle: 'bitten', third: 'bites', gerund: 'biting' },
+    'bleed': { past: 'bled', participle: 'bled', third: 'bleeds', gerund: 'bleeding' },
+    'blow': { past: 'blew', participle: 'blown', third: 'blows', gerund: 'blowing' },
+    'burn': { past: 'burned/burnt', participle: 'burned/burnt', third: 'burns', gerund: 'burning' },
+    'burst': { past: 'burst', participle: 'burst', third: 'bursts', gerund: 'bursting' },
+    'cast': { past: 'cast', participle: 'cast', third: 'casts', gerund: 'casting' },
+    'creep': { past: 'crept', participle: 'crept', third: 'creeps', gerund: 'creeping' },
+    'deal': { past: 'dealt', participle: 'dealt', third: 'deals', gerund: 'dealing' },
+    'dig': { past: 'dug', participle: 'dug', third: 'digs', gerund: 'digging' },
+    'dream': { past: 'dreamed/dreamt', participle: 'dreamed/dreamt', third: 'dreams', gerund: 'dreaming' },
+    'feed': { past: 'fed', participle: 'fed', third: 'feeds', gerund: 'feeding' },
+    'flee': { past: 'fled', participle: 'fled', third: 'flees', gerund: 'fleeing' },
+    'forbid': { past: 'forbade', participle: 'forbidden', third: 'forbids', gerund: 'forbidding' },
+    'grind': { past: 'ground', participle: 'ground', third: 'grinds', gerund: 'grinding' },
+    'hang': { past: 'hung/hanged', participle: 'hung/hanged', third: 'hangs', gerund: 'hanging' },
+    'kneel': { past: 'knelt', participle: 'knelt', third: 'kneels', gerund: 'kneeling' },
+    'lean': { past: 'leaned/leant', participle: 'leaned/leant', third: 'leans', gerund: 'leaning' },
+    'leap': { past: 'leaped/leapt', participle: 'leaped/leapt', third: 'leaps', gerund: 'leaping' },
+    'light': { past: 'lit/lighted', participle: 'lit/lighted', third: 'lights', gerund: 'lighting' },
+    'mow': { past: 'mowed', participle: 'mowed/mown', third: 'mows', gerund: 'mowing' },
+    'plead': { past: 'pleaded/pled', participle: 'pleaded/pled', third: 'pleads', gerund: 'pleading' },
+    'prove': { past: 'proved', participle: 'proved/proven', third: 'proves', gerund: 'proving' },
+    'sew': { past: 'sewed', participle: 'sewed/sewn', third: 'sews', gerund: 'sewing' },
+    'shrink': { past: 'shrank', participle: 'shrunk', third: 'shrinks', gerund: 'shrinking' },
+    'shut': { past: 'shut', participle: 'shut', third: 'shuts', gerund: 'shutting' },
+    'spill': { past: 'spilled/spilt', participle: 'spilled/spilt', third: 'spills', gerund: 'spilling' },
+    'spoil': { past: 'spoiled/spoilt', participle: 'spoiled/spoilt', third: 'spoils', gerund: 'spoiling' },
+    'spread': { past: 'spread', participle: 'spread', third: 'spreads', gerund: 'spreading' },
+    'spring': { past: 'sprang', participle: 'sprung', third: 'springs', gerund: 'springing' },
+    'steal': { past: 'stole', participle: 'stolen', third: 'steals', gerund: 'stealing' },
+    'swear': { past: 'swore', participle: 'sworn', third: 'swears', gerund: 'swearing' },
+    'sweep': { past: 'swept', participle: 'swept', third: 'sweeps', gerund: 'sweeping' },
+    'swing': { past: 'swung', participle: 'swung', third: 'swings', gerund: 'swinging' },
+    'thrust': { past: 'thrust', participle: 'thrust', third: 'thrusts', gerund: 'thrusting' },
+    'weep': { past: 'wept', participle: 'wept', third: 'weeps', gerund: 'weeping' },
+    'wind': { past: 'wound', participle: 'wound', third: 'winds', gerund: 'winding' },
+    'withdraw': { past: 'withdrew', participle: 'withdrawn', third: 'withdraws', gerund: 'withdrawing' },
+    'withhold': { past: 'withheld', participle: 'withheld', third: 'withholds', gerund: 'withholding' },
+    'withstand': { past: 'withstood', participle: 'withstood', third: 'withstands', gerund: 'withstanding' },
+    'arise': { past: 'arose', participle: 'arisen', third: 'arises', gerund: 'arising' },
+    'awake': { past: 'awoke', participle: 'awoken', third: 'awakes', gerund: 'awaking' },
+    'bear': { past: 'bore', participle: 'borne/born', third: 'bears', gerund: 'bearing' },
+    'broadcast': { past: 'broadcast', participle: 'broadcast', third: 'broadcasts', gerund: 'broadcasting' },
+    'cling': { past: 'clung', participle: 'clung', third: 'clings', gerund: 'clinging' },
+    'cost': { past: 'cost', participle: 'cost', third: 'costs', gerund: 'costing' },
+    'dive': { past: 'dived/dove', participle: 'dived', third: 'dives', gerund: 'diving' },
+    'forsake': { past: 'forsook', participle: 'forsaken', third: 'forsakes', gerund: 'forsaking' },
+    'grind': { past: 'ground', participle: 'ground', third: 'grinds', gerund: 'grinding' },
+    'heave': { past: 'heaved/hove', participle: 'heaved/hove', third: 'heaves', gerund: 'heaving' },
+    'learn': { past: 'learned/learnt', participle: 'learned/learnt', third: 'learns', gerund: 'learning' },
+    'smell': { past: 'smelled/smelt', participle: 'smelled/smelt', third: 'smells', gerund: 'smelling' },
+    'spell': { past: 'spelled/spelt', participle: 'spelled/spelt', third: 'spells', gerund: 'spelling' },
+    'spill': { past: 'spilled/spilt', participle: 'spilled/spilt', third: 'spills', gerund: 'spilling' },
+    'spoil': { past: 'spoiled/spoilt', participle: 'spoiled/spoilt', third: 'spoils', gerund: 'spoiling' },
+    'stink': { past: 'stank', participle: 'stunk', third: 'stinks', gerund: 'stinking' },
+    'strew': { past: 'strewed', participle: 'strewed/strewn', third: 'strews', gerund: 'strewing' },
+    'strive': { past: 'strove', participle: 'striven', third: 'strives', gerund: 'striving' },
+    'thrive': { past: 'thrived/throve', participle: 'thrived', third: 'thrives', gerund: 'thriving' },
+    'tread': { past: 'trod', participle: 'trod/trodden', third: 'treads', gerund: 'treading' },
+    'undergo': { past: 'underwent', participle: 'undergone', third: 'undergoes', gerund: 'undergoing' },
+    'undo': { past: 'undid', participle: 'undone', third: 'undoes', gerund: 'undoing' },
+    'upset': { past: 'upset', participle: 'upset', third: 'upsets', gerund: 'upsetting' },
+    'wed': { past: 'wed/wedded', participle: 'wed/wedded', third: 'weds', gerund: 'wedding' },
+    'wet': { past: 'wet/wetted', participle: 'wet/wetted', third: 'wets', gerund: 'wetting' }
+};
+
+function getConjugations(word, partOfSpeech) {
+    if (partOfSpeech !== 'verb') return null;
+    
+    const base = word.toLowerCase().trim();
+    const irregular = IRREGULAR_VERBS[base];
+    
+    if (irregular) {
+        return {
+            base: base,
+            past: irregular.past,
+            participle: irregular.participle,
+            third: irregular.third,
+            gerund: irregular.gerund,
+            isRegular: false
+        };
+    }
+    
+    // Reglas para verbos regulares
+    const endsE = base.endsWith('e');
+    const endsY = base.endsWith('y') && !/[aeiou]/.test(base[base.length - 2]);
+    const cvcPattern = /[bcdfghjklmnpqrstvwxyz][aeiou][bcdfghjklmnpqrstvwxz]$/.test(base);
+    
+    let past, participle, third, gerund;
+    
+    if (endsY && !endsE) {
+        past = base.slice(0, -1) + 'ied';
+        participle = base.slice(0, -1) + 'ied';
+    } else if (endsE) {
+        past = base + 'd';
+        participle = base + 'd';
+    } else {
+        past = base + 'ed';
+        participle = base + 'ed';
+    }
+    
+    // Double consonant for CVC pattern (1 syllable or stressed last syllable simplified)
+    if (cvcPattern && base.length <= 6) {
+        past = base + base.slice(-1) + 'ed';
+        participle = base + base.slice(-1) + 'ed';
+    }
+    
+    // Third person
+    if (endsY && !/[aeiou]/.test(base[base.length - 2])) {
+        third = base.slice(0, -1) + 'ies';
+    } else if (base.endsWith('s') || base.endsWith('x') || base.endsWith('z') || base.endsWith('ch') || base.endsWith('sh') || base.endsWith('o')) {
+        third = base + 'es';
+    } else {
+        third = base + 's';
+    }
+    
+    // Gerund
+    if (endsE) {
+        gerund = base.slice(0, -1) + 'ing';
+    } else if (cvcPattern && base.length <= 6) {
+        gerund = base + base.slice(-1) + 'ing';
+    } else {
+        gerund = base + 'ing';
+    }
+    
+    return {
+        base: base,
+        past: past,
+        participle: participle,
+        third: third,
+        gerund: gerund,
+        isRegular: true
+    };
+}
+
 // === DICTIONARY SEARCH ===
 const searchInput = document.getElementById('search-input');
 const searchBtn = document.getElementById('search-btn');
@@ -45,6 +267,7 @@ const resultsContainer = document.getElementById('search-results');
 let lastSearchedWord = null;
 let lastSearchData = null;
 let lastTranslation = null;
+let lastSynonyms = [];
 
 async function searchWord(word) {
     if (!word.trim()) return;
@@ -70,6 +293,9 @@ async function searchWord(word) {
         // Recolectar traducciones
         const translations = [];
         
+        // Guardar sinónimos en inglés
+        lastSynonyms = [];
+        
         // 1. Traducción principal
         if (transRes.status === 'fulfilled' && transRes.value.ok) {
             try {
@@ -81,23 +307,27 @@ async function searchWord(word) {
             } catch (e) {}
         }
         
-        // 2. Traducir sinónimos para obtener más opciones
+        // 2. Procesar sinónimos en inglés y traducirlos
         if (synRes.status === 'fulfilled' && synRes.value.ok) {
             try {
                 const synonyms = await synRes.value.json();
                 if (synonyms.length > 0) {
-                    const synWords = synonyms.slice(0, 4).map(s => s.word);
-                    const synQuery = synWords.join(', ');
-                    const synTransRes = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(synQuery)}&langpair=en|es`);
-                    if (synTransRes.ok) {
-                        const synTransData = await synTransRes.json();
-                        if (synTransData.responseData?.translatedText) {
-                            // Separar por comas o "y"
-                            const synTranslations = synTransData.responseData.translatedText
-                                .split(/,| y /)
-                                .map(t => t.trim())
-                                .filter(t => t.length > 1 && t.toLowerCase() !== word.trim().toLowerCase());
-                            translations.push(...synTranslations);
+                    lastSynonyms = synonyms.slice(0, 8).map(s => s.word);
+                    
+                    // Traducir sinónimos para más opciones en español
+                    const synWords = lastSynonyms.slice(0, 4);
+                    if (synWords.length > 0) {
+                        const synQuery = synWords.join(', ');
+                        const synTransRes = await fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(synQuery)}&langpair=en|es`);
+                        if (synTransRes.ok) {
+                            const synTransData = await synTransRes.json();
+                            if (synTransData.responseData?.translatedText) {
+                                const synTranslations = synTransData.responseData.translatedText
+                                    .split(/,| y /)
+                                    .map(t => t.trim())
+                                    .filter(t => t.length > 1 && t.toLowerCase() !== word.trim().toLowerCase());
+                                translations.push(...synTranslations);
+                            }
                         }
                     }
                 }
@@ -147,6 +377,8 @@ function renderResults(data, translation = '') {
     html += `<div style="font-size:12px; color:#1976D2; margin-top:6px; opacity:0.8;">💡 Puedes editar o agregar más traducciones</div>`;
     html += `</div>`;
     
+    let isVerb = false;
+    
     entry.meanings.forEach((meaning, idx) => {
         if (idx > 2) return; // Limit to 3 meanings
         html += `<div class="meaning">`;
@@ -162,7 +394,42 @@ function renderResults(data, translation = '') {
         }
         
         html += `</div>`;
+        
+        if (meaning.partOfSpeech === 'verb') isVerb = true;
     });
+    
+    // Sinónimos en inglés desde Datamuse
+    if (lastSynonyms.length > 0) {
+        html += `<div class="extra-section" style="margin-top:16px; padding-top:12px; border-top:1px dashed var(--border);">`;
+        html += `<div style="font-size:13px; color:var(--text-secondary); font-weight:600; margin-bottom:6px;">🔗 Sinónimos en inglés:</div>`;
+        html += `<div style="display:flex; flex-wrap:wrap; gap:6px;">`;
+        lastSynonyms.forEach(syn => {
+            html += `<span style="background:#F3E5F5; color:#7B1FA2; font-size:13px; padding:4px 10px; border-radius:10px;">${syn}</span>`;
+        });
+        html += `</div></div>`;
+    }
+    
+    // Conjugaciones para verbos
+    if (isVerb) {
+        const conj = getConjugations(entry.word, 'verb');
+        if (conj) {
+            html += `<div class="extra-section" style="margin-top:16px; padding:16px; background:#FFF8E1; border-radius:12px;">`;
+            html += `<div style="font-size:13px; color:#F57F17; font-weight:600; margin-bottom:10px;">📋 Conjugaciones:</div>`;
+            html += `<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:14px;">`;
+            html += `<div><span style="color:var(--text-secondary); font-size:12px;">Base:</span> <strong>${conj.base}</strong></div>`;
+            html += `<div><span style="color:var(--text-secondary); font-size:12px;">Pasado:</span> <strong>${conj.past}</strong></div>`;
+            html += `<div><span style="color:var(--text-secondary); font-size:12px;">Participio:</span> <strong>${conj.participle}</strong></div>`;
+            html += `<div><span style="color:var(--text-secondary); font-size:12px;">3ra persona:</span> <strong>${conj.third}</strong></div>`;
+            html += `<div style="grid-column:1 / -1;"><span style="color:var(--text-secondary); font-size:12px;">Gerundio (-ing):</span> <strong>${conj.gerund}</strong></div>`;
+            html += `</div>`;
+            if (conj.isRegular) {
+                html += `<div style="font-size:11px; color:#F57F17; margin-top:8px; opacity:0.8;">✓ Verbo regular</div>`;
+            } else {
+                html += `<div style="font-size:11px; color:#F57F17; margin-top:8px; opacity:0.8;">⚡ Verbo irregular</div>`;
+            }
+            html += `</div>`;
+        }
+    }
     
     html += `<button class="btn-save" onclick="openAddToGroup('${entry.word}')">➕ Guardar en un grupo</button>`;
     html += `</div>`;
