@@ -10,6 +10,19 @@
     --text-secondary: #8E8E93;
     --border: #E5E5EA;
     --shadow: 0 2px 10px rgba(0,0,0,0.1);
+    --input-bg: #FFFFFF;
+    --info-bg: #E3F2FD;
+    --info-text: #1976D2;
+    --info-text-dark: #0D47A1;
+    --info-border: #90CAF9;
+    --warning-bg: #FFF8E1;
+    --warning-text: #F57F17;
+    --success-bg: #E8F5E9;
+    --error-bg: #FFEBEE;
+    --error-text: #C62828;
+    --error-border: #C62828;
+    --synonym-bg: #F3E5F5;
+    --synonym-text: #7B1FA2;
 }
 
 * {
@@ -240,7 +253,7 @@ html, body {
 .word-card .saved-message {
     margin-top: 12px;
     padding: 10px;
-    background: #E8F5E9;
+    background: var(--success-bg);
     color: var(--success);
     border-radius: 8px;
     text-align: center;
@@ -250,8 +263,8 @@ html, body {
 
 /* Error / Not Found */
 .error-card {
-    background: #FFEBEE;
-    color: #C62828;
+    background: var(--error-bg);
+    color: var(--error-text);
     padding: 20px;
     border-radius: 16px;
     text-align: center;
@@ -260,9 +273,9 @@ html, body {
 .error-card button {
     margin-top: 12px;
     padding: 10px 20px;
-    background: white;
-    border: 1px solid #C62828;
-    color: #C62828;
+    background: var(--card-bg);
+    border: 1px solid var(--error-border);
+    color: var(--error-text);
     border-radius: 8px;
     cursor: pointer;
 }
@@ -360,8 +373,8 @@ html, body {
 
 .translation-tag {
     display: inline-block;
-    background: #E3F2FD;
-    color: #0D47A1;
+    background: var(--info-bg);
+    color: var(--info-text-dark);
     font-size: 13px;
     font-weight: 500;
     padding: 3px 10px;
@@ -385,7 +398,7 @@ html, body {
 }
 
 .word-item .btn-delete:active {
-    background: #FFEBEE;
+    background: var(--error-bg);
 }
 
 /* Flashcards */
@@ -639,7 +652,7 @@ html, body {
 }
 
 .group-option.new-group-opt {
-    background: #E3F2FD;
+    background: var(--info-bg);
     color: var(--primary);
 }
 
@@ -722,4 +735,129 @@ html, body {
 /* Scrollbar hide */
 ::-webkit-scrollbar {
     display: none;
+}
+
+/* Dark Mode */
+body.dark {
+    --bg: #000000;
+    --card-bg: #1C1C1E;
+    --text: #FFFFFF;
+    --text-secondary: #8E8E93;
+    --border: #38383A;
+    --shadow: 0 2px 10px rgba(0,0,0,0.5);
+    --input-bg: #2C2C2E;
+    --info-bg: #1A2F4A;
+    --info-text: #64B5F6;
+    --info-text-dark: #90CAF9;
+    --info-border: #1565C0;
+    --warning-bg: #2A2610;
+    --warning-text: #FFB74D;
+    --success-bg: #1B3A24;
+    --error-bg: #3A1010;
+    --error-text: #EF5350;
+    --error-border: #EF5350;
+    --synonym-bg: #2E1A3A;
+    --synonym-text: #CE93D8;
+}
+
+body.dark .search-box input,
+body.dark .modal-content input {
+    background: var(--input-bg);
+    color: var(--text);
+}
+
+/* Translation Box */
+.translation-box {
+    background: var(--info-bg);
+    padding: 12px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+}
+
+.translation-label {
+    font-size: 13px;
+    color: var(--info-text);
+    font-weight: 600;
+    margin-bottom: 4px;
+}
+
+.translation-input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid var(--info-border);
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    background: var(--card-bg);
+    color: var(--text);
+}
+
+.translation-tip {
+    font-size: 12px;
+    color: var(--info-text);
+    margin-top: 6px;
+    opacity: 0.8;
+}
+
+/* Synonyms Section */
+.synonyms-section {
+    margin-top: 16px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--border);
+}
+
+.synonyms-section .section-label {
+    font-size: 13px;
+    color: var(--text-secondary);
+    font-weight: 600;
+    margin-bottom: 6px;
+}
+
+.synonym-tag {
+    background: var(--synonym-bg);
+    color: var(--synonym-text);
+    font-size: 13px;
+    padding: 4px 10px;
+    border-radius: 10px;
+    display: inline-block;
+    margin: 2px;
+}
+
+/* Conjugations Box */
+.conjugations-box {
+    margin-top: 16px;
+    padding: 16px;
+    background: var(--warning-bg);
+    border-radius: 12px;
+}
+
+.conjugations-box .section-label {
+    font-size: 13px;
+    color: var(--warning-text);
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.conj-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    font-size: 14px;
+    color: var(--text);
+}
+
+.conj-grid.full-width {
+    grid-column: 1 / -1;
+}
+
+.conj-label {
+    color: var(--text-secondary);
+    font-size: 12px;
+}
+
+.conj-type {
+    font-size: 11px;
+    color: var(--warning-text);
+    margin-top: 8px;
+    opacity: 0.8;
 }

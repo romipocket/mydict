@@ -1,5 +1,6 @@
 // === DATA STORAGE ===
 const STORAGE_KEY = 'mydict_data';
+const THEME_KEY = 'mydict_theme';
 
 function loadData() {
     const raw = localStorage.getItem(STORAGE_KEY);
@@ -12,6 +13,35 @@ function saveData(data) {
 }
 
 let appData = loadData();
+
+// === THEME / DARK MODE ===
+function loadTheme() {
+    return localStorage.getItem(THEME_KEY) || 'light';
+}
+
+function saveTheme(theme) {
+    localStorage.setItem(THEME_KEY, theme);
+}
+
+function applyTheme(theme) {
+    if (theme === 'dark') {
+        document.body.classList.add('dark');
+        document.getElementById('btn-theme').textContent = '☀️';
+    } else {
+        document.body.classList.remove('dark');
+        document.getElementById('btn-theme').textContent = '🌙';
+    }
+}
+
+function toggleTheme() {
+    const current = document.body.classList.contains('dark') ? 'dark' : 'light';
+    const next = current === 'dark' ? 'light' : 'dark';
+    applyTheme(next);
+    saveTheme(next);
+}
+
+document.getElementById('btn-theme').addEventListener('click', toggleTheme);
+applyTheme(loadTheme());
 
 // === NAVIGATION ===
 function showScreen(screenId) {
@@ -371,10 +401,10 @@ function renderResults(data, translation = '') {
     if (phonetic) html += `<div class="phonetic">${phonetic} ${audio ? `<button onclick="playAudio('${audio}')" style="background:none;border:none;font-size:18px;cursor:pointer;">🔊</button>` : ''}</div>`;
     
     // Mostrar traducción editable
-    html += `<div class="translation-box" style="background:#E3F2FD; padding:12px; border-radius:10px; margin-bottom:12px;">`;
-    html += `<div style="font-size:13px; color:#1976D2; font-weight:600; margin-bottom:4px;">🇪🇸 Traducción:</div>`;
-    html += `<input type="text" id="manual-translation" value="${translation}" placeholder="Escribe la traducción..." style="width:100%; padding:10px; border:1px solid #90CAF9; border-radius:8px; font-size:16px; outline:none;">`;
-    html += `<div style="font-size:12px; color:#1976D2; margin-top:6px; opacity:0.8;">💡 Puedes editar o agregar más traducciones</div>`;
+    html += `<div class="translation-box">`;
+    html += `<div class="translation-label">🇪🇸 Traducción:</div>`;
+    html += `<input type="text" id="manual-translation" class="translation-input" value="${translation}" placeholder="Escribe la traducción...">`;
+    html += `<div class="translation-tip">💡 Puedes editar o agregar más traducciones</div>`;
     html += `</div>`;
     
     let isVerb = false;
@@ -400,11 +430,11 @@ function renderResults(data, translation = '') {
     
     // Sinónimos en inglés desde Datamuse
     if (lastSynonyms.length > 0) {
-        html += `<div class="extra-section" style="margin-top:16px; padding-top:12px; border-top:1px dashed var(--border);">`;
-        html += `<div style="font-size:13px; color:var(--text-secondary); font-weight:600; margin-bottom:6px;">🔗 Sinónimos en inglés:</div>`;
+        html += `<div class="synonyms-section">`;
+        html += `<div class="section-label">🔗 Sinónimos en inglés:</div>`;
         html += `<div style="display:flex; flex-wrap:wrap; gap:6px;">`;
         lastSynonyms.forEach(syn => {
-            html += `<span style="background:#F3E5F5; color:#7B1FA2; font-size:13px; padding:4px 10px; border-radius:10px;">${syn}</span>`;
+            html += `<span class="synonym-tag">${syn}</span>`;
         });
         html += `</div></div>`;
     }
@@ -413,19 +443,19 @@ function renderResults(data, translation = '') {
     if (isVerb) {
         const conj = getConjugations(entry.word, 'verb');
         if (conj) {
-            html += `<div class="extra-section" style="margin-top:16px; padding:16px; background:#FFF8E1; border-radius:12px;">`;
-            html += `<div style="font-size:13px; color:#F57F17; font-weight:600; margin-bottom:10px;">📋 Conjugaciones:</div>`;
-            html += `<div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; font-size:14px;">`;
-            html += `<div><span style="color:var(--text-secondary); font-size:12px;">Base:</span> <strong>${conj.base}</strong></div>`;
-            html += `<div><span style="color:var(--text-secondary); font-size:12px;">Pasado:</span> <strong>${conj.past}</strong></div>`;
-            html += `<div><span style="color:var(--text-secondary); font-size:12px;">Participio:</span> <strong>${conj.participle}</strong></div>`;
-            html += `<div><span style="color:var(--text-secondary); font-size:12px;">3ra persona:</span> <strong>${conj.third}</strong></div>`;
-            html += `<div style="grid-column:1 / -1;"><span style="color:var(--text-secondary); font-size:12px;">Gerundio (-ing):</span> <strong>${conj.gerund}</strong></div>`;
+            html += `<div class="conjugations-box">`;
+            html += `<div class="section-label">📋 Conjugaciones:</div>`;
+            html += `<div class="conj-grid">`;
+            html += `<div><span class="conj-label">Base:</span> <strong>${conj.base}</strong></div>`;
+            html += `<div><span class="conj-label">Pasado:</span> <strong>${conj.past}</strong></div>`;
+            html += `<div><span class="conj-label">Participio:</span> <strong>${conj.participle}</strong></div>`;
+            html += `<div><span class="conj-label">3ra persona:</span> <strong>${conj.third}</strong></div>`;
+            html += `<div class="conj-grid full-width"><span class="conj-label">Gerundio (-ing):</span> <strong>${conj.gerund}</strong></div>`;
             html += `</div>`;
             if (conj.isRegular) {
-                html += `<div style="font-size:11px; color:#F57F17; margin-top:8px; opacity:0.8;">✓ Verbo regular</div>`;
+                html += `<div class="conj-type">✓ Verbo regular</div>`;
             } else {
-                html += `<div style="font-size:11px; color:#F57F17; margin-top:8px; opacity:0.8;">⚡ Verbo irregular</div>`;
+                html += `<div class="conj-type">⚡ Verbo irregular</div>`;
             }
             html += `</div>`;
         }
@@ -660,7 +690,7 @@ function renderWordsList() {
             transHtml = transList.map(t => `<span class="translation-tag">${t}</span>`).join(' ');
         }
         
-        const subText = word.definition ? `<div style="font-size:12px; color:#999; margin-top:6px; font-style:italic; line-height:1.4;">${word.definition}</div>` : '';
+        const subText = word.definition ? `<div style="font-size:12px; color:var(--text-secondary); margin-top:6px; font-style:italic; line-height:1.4;">${word.definition}</div>` : '';
         
         item.innerHTML = `
             <div style="flex:1; min-width:0;">
