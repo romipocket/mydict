@@ -67,6 +67,217 @@ document.querySelectorAll('.nav-btn').forEach(btn => {
     btn.addEventListener('click', () => showScreen(btn.dataset.screen));
 });
 
+// === EMOJI DICTIONARY ===
+const WORD_EMOJIS = {
+    'apple': '🍎', 'banana': '🍌', 'orange': '🍊', 'grape': '🍇', 'strawberry': '🍓',
+    'cherry': '🍒', 'peach': '🍑', 'pear': '🍐', 'lemon': '🍋', 'watermelon': '🍉',
+    'pineapple': '🍍', 'coconut': '🥥', 'avocado': '🥑', 'eggplant': '🍆', 'potato': '🥔',
+    'carrot': '🥕', 'corn': '🌽', 'broccoli': '🥦', 'cucumber': '🥒', 'mushroom': '🍄',
+    'onion': '🧅', 'garlic': '🧄', 'bread': '🍞', 'baguette': '🥖', 'croissant': '🥐',
+    'pizza': '🍕', 'burger': '🍔', 'fries': '🍟', 'hotdog': '🌭', 'sandwich': '🥪',
+    'taco': '🌮', 'burrito': '🌯', 'sushi': '🍣', 'rice': '🍚', 'pasta': '🍝',
+    'spaghetti': '🍝', 'noodles': '🍜', 'soup': '🍲', 'stew': '🍲', 'salad': '🥗',
+    'egg': '🥚', 'bacon': '🥓', 'steak': '🥩', 'chicken': '🍗', 'fish': '🐟',
+    'shrimp': '🦐', 'lobster': '🦞', 'crab': '🦀', 'oyster': '🦪', 'snail': '🐌',
+    'coffee': '☕', 'tea': '🍵', 'wine': '🍷', 'beer': '🍺', 'cocktail': '🍸',
+    'juice': '🧃', 'milk': '🥛', 'water': '💧', 'ice': '🧊', 'cake': '🎂',
+    'cookie': '🍪', 'donut': '🍩', 'chocolate': '🍫', 'candy': '🍬', 'lollipop': '🍭',
+    'honey': '🍯', 'cat': '🐱', 'dog': '🐶', 'puppy': '🐶', 'wolf': '🐺',
+    'fox': '🦊', 'bear': '🐻', 'panda': '🐼', 'koala': '🐨', 'tiger': '🐯',
+    'lion': '🦁', 'horse': '🐴', 'pony': '🐴', 'zebra': '🦓', 'deer': '🦌',
+    'giraffe': '🦒', 'elephant': '🐘', 'rhino': '🦏', 'hippo': '🦛', 'monkey': '🐵',
+    'gorilla': '🦍', 'orangutan': '🦧', 'mouse': '🐭', 'rat': '🐀', 'hamster': '🐹',
+    'rabbit': '🐰', 'bunny': '🐰', 'hedgehog': '🦔', 'bat': '🦇', 'bear': '🐻',
+    'pig': '🐷', 'boar': '🐗', 'cow': '🐮', 'ox': '🐂', 'buffalo': '🐃',
+    'bison': '🦬', 'sheep': '🐑', 'ram': '🐏', 'goat': '🐐', 'camel': '🐪',
+    'llama': '🦙', 'giraffe': '🦒', 'kangaroo': '🦘', 'badger': '🦡', 'beaver': '🦫',
+    'otter': '🦦', 'sloth': '🦥', 'bird': '🐦', 'chicken': '🐔', 'rooster': '🐓',
+    'turkey': '🦃', 'duck': '🦆', 'swan': '🦢', 'goose': '🪿', 'peacock': '🦚',
+    'parrot': '🦜', 'flamingo': '🦩', 'dove': '🕊️', 'eagle': '🦅', 'hawk': '🦅',
+    'owl': '🦉', 'crow': '🐦‍⬛', 'penguin': '🐧', 'seagull': '🐦', 'sparrow': '🐦',
+    'butterfly': '🦋', 'bee': '🐝', 'ant': '🐜', 'ladybug': '🐞', 'cricket': '🦗',
+    'spider': '🕷️', 'scorpion': '🦂', 'snail': '🐌', 'snake': '🐍', 'lizard': '🦎',
+    'turtle': '🐢', 'crocodile': '🐊', 'alligator': '🐊', 'dinosaur': '🦖', 'dragon': '🐉',
+    'whale': '🐋', 'dolphin': '🐬', 'shark': '🦈', 'octopus': '🐙', 'squid': '🦑',
+    'jellyfish': '🪼', 'seal': '🦭', 'shell': '🐚', 'coral': '🪸', 'crab': '🦀',
+    'tree': '🌳', 'pine': '🌲', 'palm': '🌴', 'cactus': '🌵', 'flower': '🌸',
+    'rose': '🌹', 'tulip': '🌷', 'sunflower': '🌻', 'hibiscus': '🌺', 'blossom': '🌼',
+    'maple': '🍁', 'leaf': '🍃', 'herb': '🌿', 'shamrock': '☘️', 'clover': '🍀',
+    'mushroom': '🍄', 'chestnut': '🌰', 'seed': '🌱', 'sprout': '🌱', 'evergreen': '🌲',
+    'sun': '☀️', 'moon': '🌙', 'star': '⭐', 'cloud': '☁️', 'rain': '🌧️',
+    'snow': '❄️', 'thunder': '⛈️', 'lightning': '⚡', 'tornado': '🌪️', 'fog': '🌫️',
+    'wind': '💨', 'rainbow': '🌈', 'fire': '🔥', 'sunrise': '🌅', 'sunset': '🌇',
+    'mountain': '⛰️', 'volcano': '🌋', 'desert': '🏜️', 'beach': '🏖️', 'island': '🏝️',
+    'forest': '🌲', 'park': '🏞️', 'camping': '🏕️', 'tent': '⛺', 'house': '🏠',
+    'home': '🏠', 'building': '🏢', 'office': '🏢', 'hotel': '🏨', 'hospital': '🏥',
+    'school': '🏫', 'university': '🎓', 'bank': '🏦', 'store': '🏪', 'shop': '🛍️',
+    'factory': '🏭', 'castle': '🏰', 'church': '⛪', 'temple': '🛕', 'mosque': '🕌',
+    'synagogue': '🕍', 'bridge': '🌉', 'tower': '🗼', 'statue': '🗽', 'fountain': '⛲',
+    'car': '🚗', 'automobile': '🚗', 'taxi': '🚕', 'bus': '🚌', 'train': '🚆',
+    'subway': '🚇', 'tram': '🚊', 'ship': '🚢', 'boat': '⛵', 'sailboat': '⛵',
+    'canoe': '🛶', 'kayak': '🛶', 'speedboat': '🚤', 'cruise': '🛳️', 'ferry': '⛴️',
+    'airplane': '✈️', 'helicopter': '🚁', 'rocket': '🚀', 'satellite': '🛰️', 'ufo': '🛸',
+    'bike': '🚲', 'bicycle': '🚲', 'motorcycle': '🏍️', 'scooter': '🛵', 'bus': '🚌',
+    'truck': '🚚', 'van': '🚐', 'ambulance': '🚑', 'firetruck': '🚒', 'police': '🚓',
+    'taxi': '🚕', 'tractor': '🚜', 'bulldozer': '🚜', 'crane': '🏗️', 'forklift': '🚜',
+    'bed': '🛏️', 'chair': '🪑', 'sofa': '🛋️', 'table': '🍽️', 'desk': '🖥️',
+    'lamp': '💡', 'candle': '🕯️', 'clock': '⏰', 'watch': '⌚', 'hourglass': '⏳',
+    'phone': '📱', 'telephone': '☎️', 'computer': '💻', 'laptop': '💻', 'keyboard': '⌨️',
+    'mouse': '🖱️', 'printer': '🖨️', 'camera': '📷', 'video': '📹', 'tv': '📺',
+    'radio': '📻', 'microphone': '🎤', 'headphones': '🎧', 'speaker': '🔊', 'battery': '🔋',
+    'plug': '🔌', 'bulb': '💡', 'flashlight': '🔦', 'book': '📖', 'notebook': '📓',
+    'paper': '📄', 'newspaper': '📰', 'magazine': '📰', 'letter': '✉️', 'envelope': '✉️',
+    'pencil': '✏️', 'pen': '🖊️', 'marker': '🖍️', 'crayon': '🖍️', 'paintbrush': '🖌️',
+    'palette': '🎨', 'canvas': '🎨', 'scissors': '✂️', 'knife': '🔪', 'hammer': '🔨',
+    'wrench': '🔧', 'screwdriver': '🪛', 'gear': '⚙️', 'chain': '⛓️', 'lock': '🔒',
+    'key': '🔑', 'map': '🗺️', 'compass': '🧭', 'globe': '🌍', 'world': '🌍',
+    'flag': '🚩', 'banner': '🎌', 'balloon': '🎈', 'party': '🎉', 'gift': '🎁',
+    'trophy': '🏆', 'medal': '🏅', 'crown': '👑', 'gem': '💎', 'ring': '💍',
+    'necklace': '📿', 'bracelet': '💎', 'earrings': '💎', 'watch': '⌚', 'glasses': '👓',
+    'sunglasses': '🕶️', 'hat': '🎩', 'cap': '🧢', 'scarf': '🧣', 'gloves': '🧤',
+    'coat': '🧥', 'jacket': '🧥', 'shirt': '👕', 'tshirt': '👕', 'jeans': '👖',
+    'pants': '👖', 'shorts': '🩳', 'skirt': '👗', 'dress': '👗', 'suit': '🕴️',
+    'kimono': '👘', 'sari': '🥻', 'swimsuit': '👙', 'bikini': '👙', 'lingerie': '👙',
+    'shoes': '👟', 'sneakers': '👟', 'boots': '🥾', 'sandals': '👡', 'heels': '👠',
+    'slippers': '🩴', 'socks': '🧦', 'backpack': '🎒', 'bag': '👜', 'purse': '👛',
+    'wallet': '👛', 'umbrella': '☂️', 'cane': '🦯', 'crutch': '🩼', 'bandage': '🩹',
+    'syringe': '💉', 'pill': '💊', 'medicine': '💊', 'thermometer': '🌡️', 'stethoscope': '🩺',
+    'toothbrush': '🪥', 'toothpaste': '🦷', 'soap': '🧼', 'shampoo': '🧴', 'lotion': '🧴',
+    'comb': '🪮', 'mirror': '🪞', 'razor': '🪒', 'scissors': '✂️', 'tweezers': '✂️',
+    'broom': '🧹', 'mop': '🪣', 'bucket': '🪣', 'sponge': '🧽', 'toilet': '🚽',
+    'shower': '🚿', 'bathtub': '🛁', 'towel': '🧻', 'tissue': '🧻', 'trash': '🗑️',
+    'recycling': '♻️', 'broom': '🧹', 'basket': '🧺', 'ball': '⚽', 'soccer': '⚽',
+    'football': '🏈', 'basketball': '🏀', 'baseball': '⚾', 'tennis': '🎾', 'volleyball': '🏐',
+    'rugby': '🏉', 'cricket': '🏏', 'hockey': '🏒', 'golf': '⛳', 'bowling': '🎳',
+    'boxing': '🥊', 'martial': '🥋', 'karate': '🥋', 'gymnastics': '🤸', 'dance': '💃',
+    'music': '🎵', 'guitar': '🎸', 'piano': '🎹', 'violin': '🎻', 'trumpet': '🎺',
+    'saxophone': '🎷', 'flute': '🪈', 'drum': '🥁', 'microphone': '🎤', 'headphones': '🎧',
+    'sax': '🎷', 'harp': '🎶', 'accordion': '🪗', 'banjo': '🪕', 'maracas': '🪇',
+    'money': '💰', 'dollar': '💵', 'euro': '💶', 'pound': '💷', 'yen': '💴',
+    'credit': '💳', 'receipt': '🧾', 'chart': '📈', 'graph': '📉', 'trend': '📊',
+    'briefcase': '💼', 'mailbox': '📬', 'package': '📦', 'label': '🏷️', 'shopping': '🛒',
+    'cart': '🛒', 'basket': '🧺', 'moneybag': '💰', 'coin': '🪙', 'gem': '💎',
+    'crown': '👑', 'scepter': '👑', 'king': '🤴', 'queen': '👸', 'prince': '🤴',
+    'princess': '👸', 'superhero': '🦸', 'villain': '🦹', 'ninja': '🥷', 'magician': '🧙',
+    'fairy': '🧚', 'mermaid': '🧜', 'elf': '🧝', 'vampire': '🧛', 'zombie': '🧟',
+    'ghost': '👻', 'alien': '👽', 'robot': '🤖', 'clown': '🤡', 'baby': '👶',
+    'child': '🧒', 'boy': '👦', 'girl': '👧', 'man': '👨', 'woman': '👩',
+    'person': '🧑', 'adult': '🧑', 'elder': '🧓', 'grandma': '👵', 'grandpa': '👴',
+    'family': '👨‍👩‍👧‍👦', 'couple': '💑', 'kiss': '💋', 'heart': '❤️', 'love': '❤️',
+    'broken': '💔', 'anger': '💢', 'explosion': '💥', 'fire': '🔥', 'sparkle': '✨',
+    'star': '⭐', 'zap': '⚡', 'snowflake': '❄️', 'droplet': '💧', 'bubble': '🫧',
+    'tornado': '🌪️', 'fog': '🌫️', 'drought': '🏜️', 'earthquake': '🫨', 'tsunami': '🌊',
+    'volcano': '🌋', 'flood': '🌊', 'storm': '⛈️', 'hurricane': '🌀', 'comet': '☄️',
+    'planet': '🪐', 'galaxy': '🌌', 'universe': '🌌', 'space': '🚀', 'astronaut': '👨‍🚀',
+    'alien': '👽', 'ufo': '🛸', 'rocket': '🚀', 'satellite': '🛰️', 'telescope': '🔭',
+    'microscope': '🔬', 'dna': '🧬', 'atom': '⚛️', 'radioactive': '☢️', 'biohazard': '☣️',
+    'warning': '⚠️', 'stop': '🛑', 'prohibited': '🚫', 'no_entry': '⛔', 'forbidden': '🚭',
+    'danger': '☠️', 'skull': '💀', 'bone': '🦴', 'tooth': '🦷', 'eye': '👁️',
+    'tongue': '👅', 'ear': '👂', 'nose': '👃', 'mouth': '👄', 'brain': '🧠',
+    'heart': '🫀', 'lungs': '🫁', 'stomach': '🤰', 'leg': '🦵', 'foot': '🦶',
+    'arm': '💪', 'muscle': '💪', 'bone': '🦴', 'blood': '🩸', 'bandage': '🩹',
+    'crutch': '🩼', 'wheelchair': '♿', 'cane': '🦯', 'hearing': '🦻', 'glasses': '👓',
+    'mask': '😷', 'thermometer': '🌡️', 'pill': '💊', 'syringe': '💉', 'stethoscope': '🩺',
+    'ambulance': '🚑', 'hospital': '🏥', 'doctor': '👨‍⚕️', 'nurse': '👩‍⚕️', 'dentist': '🦷',
+    'pharmacy': '💊', 'medicine': '💊', 'health': '❤️‍🩹', 'fitness': '🏋️', 'yoga': '🧘',
+    'running': '🏃', 'walking': '🚶', 'hiking': '🥾', 'cycling': '🚴', 'swimming': '🏊',
+    'surfing': '🏄', 'skiing': '⛷️', 'snowboarding': '🏂', 'skating': '⛸️', 'fishing': '🎣',
+    'hunting': '🏹', 'archery': '🏹', 'shooting': '🔫', 'boxing': '🥊', 'wrestling': '🤼',
+    'fencing': '🤺', 'gymnastics': '🤸', 'weightlifting': '🏋️', 'meditation': '🧘', 'dance': '💃',
+    'ballet': '🩰', 'theater': '🎭', 'opera': '🎭', 'circus': '🎪', 'carnival': '🎡',
+    'festival': '🎪', 'party': '🥳', 'birthday': '🎂', 'wedding': '💒', 'funeral': '⚰️',
+    'graduation': '🎓', 'celebration': '🎉', 'fireworks': '🎆', 'sparkler': '🎇', 'confetti': '🎊',
+    'balloon': '🎈', 'banner': '🎌', 'flags': '🎏', 'ribbon': '🎀', 'trophy': '🏆',
+    'medal': '🏅', 'prize': '🏆', 'crown': '👑', 'king': '🤴', 'queen': '👸',
+    'prince': '🤴', 'princess': '👸', 'knight': '⚔️', 'shield': '🛡️', 'sword': '⚔️',
+    'dagger': '🗡️', 'axe': '🪓', 'bow': '🏹', 'arrow': '🏹', 'target': '🎯',
+    'bullseye': '🎯', 'dart': '🎯', 'billiards': '🎱', 'pool': '🎱', 'pingpong': '🏓',
+    'badminton': '🏸', 'tennis': '🎾', 'frisbee': '🥏', 'kite': '🪁', 'yo-yo': '🪀',
+    'dice': '🎲', 'puzzle': '🧩', 'toy': '🧸', 'teddy': '🧸', 'doll': '🎎',
+    'robot': '🤖', 'lego': '🧱', 'blocks': '🧱', 'game': '🎮', 'controller': '🎮',
+    'joystick': '🕹️', 'slot': '🎰', 'casino': '🎰', 'poker': '🃏', 'cards': '🃏',
+    'chess': '♟️', 'checkers': '⚫', 'dominoes': '🎲', 'mahjong': '🀄', 'darts': '🎯',
+    'bowling': '🎳', 'golf': '⛳', 'hole': '⛳', 'flag': '🚩', 'golfball': '⛳',
+    'rugby': '🏉', 'cricket': '🏏', 'lacrosse': '🥍', 'field': '🏑', 'hockey': '🏒',
+    'puck': '🏒', 'stick': '🏒', 'skis': '🎿', 'snowboard': '🏂', 'sled': '🛷',
+    'curling': '🥌', 'ice': '🧊', 'crystal': '🔮', 'ball': '🔮', 'magic': '✨',
+    'wand': '🪄', 'hat': '🎩', 'rabbit': '🐇', 'dove': '🕊️', 'pigeon': '🐦',
+    'parrot': '🦜', 'peacock': '🦚', 'flamingo': '🦩', 'swan': '🦢', 'duck': '🦆',
+    'goose': '🪿', 'turkey': '🦃', 'chicken': '🐔', 'rooster': '🐓', 'bird': '🐦',
+    'penguin': '🐧', 'eagle': '🦅', 'hawk': '🦅', 'owl': '🦉', 'bat': '🦇',
+    'butterfly': '🦋', 'bug': '🐛', 'ant': '🐜', 'bee': '🐝', 'beetle': '🪲',
+    'caterpillar': '🐛', 'cockroach': '🪳', 'cricket': '🦗', 'dragonfly': '🦋', 'firefly': '✨',
+    'fly': '🪰', 'grasshopper': '🦗', 'ladybug': '🐞', 'mosquito': '🦟', 'moth': '🦋',
+    'scorpion': '🦂', 'snail': '🐌', 'spider': '🕷️', 'tick': '🪳', 'worm': '🪱',
+    'centipede': '🐛', 'millipede': '🐛', 'praying': '🙏', 'mantis': '🦗', 'cicada': '🦗',
+    'locust': '🦗', 'termite': '🐜', 'flea': '🪰', 'louse': '🪰', 'bedbug': '🪳',
+    'stinkbug': '🪳', 'beetle': '🪲', 'weevil': '🪲', 'mantis': '🦗', 'stickbug': '🦗',
+    'leafbug': '🦗', 'assassin': '🥷', 'bug': '🐛', 'junebug': '🪲', 'dung': '💩',
+    'beetle': '🪲', 'rhino': '🦏', 'beetle': '🪲', 'stag': '🦌', 'beetle': '🪲',
+    'hercules': '🦍', 'beetle': '🪲', 'goliath': '🦍', 'beetle': '🪲', 'titan': '🦍',
+    'beetle': '🪲', 'jewel': '💎', 'beetle': '🪲', 'tiger': '🐯', 'beetle': '🪲',
+    ' scarab': '🪲', 'dung': '💩', 'roller': '🛼', 'dung': '💩', 'beetle': '🪲',
+    'tumblebug': '🪲', 'pill': '💊', 'bug': '🐛', 'roly': '⚪', 'poly': '⚪',
+    'woodlouse': '🐛', 'sow': '🐷', 'bug': '🐛', 'potato': '🥔', 'bug': '🐛',
+    'armadillo': '🐗', 'bug': '🐛', 'giant': '🦍', 'water': '💧', 'bug': '🐛',
+    'toe': '🦶', 'biter': '🦟', 'backswimmer': '🏊', 'water': '💧', 'boatman': '🚣',
+    'water': '💧', 'strider': '🚶', 'pond': '🏞️', 'skater': '⛸️', 'whirligig': '🌀',
+    'beetle': '🪲', 'diving': '🤿', 'beetle': '🪲', 'riffle': '🌊', 'beetle': '🪲',
+    'carrion': '⚰️', 'beetle': '🪲', 'burying': '⚰️', 'beetle': '🪲', 'checkered': '✅',
+    'beetle': '🪲', 'soldier': '🪖', 'beetle': '🪲', 'bombardier': '💣', 'beetle': '🪲',
+    'click': '👆', 'beetle': '🪲', 'firefly': '✨', 'lightning': '⚡', 'bug': '🐛',
+    'glow': '✨', 'worm': '🪱', 'candle': '🕯️', 'snake': '🐍', 'fly': '🪰',
+    'soldier': '🪖', 'fly': '🪰', 'crane': '🏗️', 'fly': '🪰', 'hover': '🛸',
+    'fly': '🪰', 'bee': '🐝', 'fly': '🪰', 'wasp': '🐝', 'hornet': '🐝',
+    'yellowjacket': '🐝', 'jacket': '🧥', 'tarantula': '🕷️', 'hawk': '🦅', 'eagle': '🦅',
+    'spider': '🕷️', 'wolf': '🐺', 'spider': '🕷️', 'jumping': '🦘', 'spider': '🕷️',
+    'orb': '🔮', 'weaver': '🧶', 'spider': '🕷️', 'crab': '🦀', 'spider': '🕷️',
+    'cobweb': '🕸️', 'spider': '🕷️', 'black': '⬛', 'widow': '👰', 'spider': '🕷️',
+    'brown': '🟫', 'recluse': '🏠', 'spider': '🕷️', 'tarantula': '🕷️', 'wolf': '🐺',
+    'spider': '🕷️', 'camel': '🐪', 'spider': '🕷️', 'vinegaroon': '🦂', 'scorpion': '🦂',
+    'pseudoscorpion': '🦂', 'wind': '💨', 'scorpion': '🦂', 'book': '📖', 'scorpion': '🦂',
+    'tailless': '🚫', 'whip': '🪵', 'scorpion': '🦂', ' pseudoscorpion': '🦂', 'harvestman': '🕷️',
+    'daddy': '👨', 'longlegs': '🦵', 'mite': '🪳', 'tick': '🪳', 'chigger': '🪳',
+    'spider': '🕷️', 'mite': '🪳', 'dust': '🌫️', 'mite': '🪳', 'scabies': '🪳',
+    'mite': '🪳', 'bird': '🐦', 'mite': '🪳', 'snake': '🐍', 'mite': '🪳',
+    'ear': '👂', 'mite': '🪳', 'follicle': '💇', 'mite': '🪳', 'face': '😀',
+    'mite': '🪳', 'demodex': '🪳', 'itch': '😣', 'mite': '🪳', 'house': '🏠',
+    'dust': '🌫️', 'mite': '🪳', 'storage': '📦', 'mite': '🪳', 'cheese': '🧀',
+    'mite': '🪳', 'flour': '🌾', 'mite': '🪳', 'grain': '🌾', 'mite': '🪳',
+    'mold': '🍄', 'mite': '🪳', 'strawberry': '🍓', 'mite': '🪳', 'coconut': '🥥',
+    'mite': '🪳', 'bee': '🐝', 'mite': '🪳', 'varroa': '🪳', 'mite': '🪳',
+    'tracheal': '🫁', 'mite': '🪳', 'bee': '🐝', 'mite': '🪳', 'tropilaelaps': '🪳',
+    'mite': '🪳', 'bee': '🐝', 'mite': '🪳', 'luke': '⬆️', 'mite': '🪳',
+    'mite': '🪳', 'bee': '🐝', 'mite': '🪳', 'syria': '🇸🇾', 'mite': '🪳',
+    'mite': '🪳', 'bee': '🐝', 'mite': '🪳', 'bee': '🐝', 'mite': '🪳',
+    'bee': '🐝', 'mite': '🪳', 'bee': '🐝', 'mite': '🪳', 'bee': '🐝',
+    'mite': '🪳', 'bee': '🐝', 'mite': '🪳', 'bee': '🐝', 'mite': '🪳',
+    'bee': '🐝', 'mite': '🪳', 'bee': '🐝', 'mite': '🪳', 'bee': '🐝',
+    'mite': '🪳', 'bee': '🐝', 'mite': '🪳', 'bee': '🐝', 'mite': '🪳',
+    'bee': '🐝', 'mite': '🪳', 'bee': '🐝', 'mite': '🪳', 'bee': '🐝',
+    'mite': '🪳', 'bee': '🐝', 'mite': '🪳', 'bee': '🐝', 'mite': '🪳',
+    'bee': '🐝', 'mite': '🪳', 'bee': '🐝', 'mite': '🪳', 'bee': '🐝',
+    'mite': '🪳', 'bee': '🐝', 'mite': '🪳', 'bee': '🐝', 'mite': '🪳'
+};
+
+function getEmojiForWord(word, partOfSpeech) {
+    const lower = word.toLowerCase().trim();
+    
+    // Buscar exacto
+    if (WORD_EMOJIS[lower]) return WORD_EMOJIS[lower];
+    
+    // Buscar palabras compuestas
+    for (const [key, emoji] of Object.entries(WORD_EMOJIS)) {
+        if (lower.includes(key)) return emoji;
+    }
+    
+    // Fallback por categoría gramatical
+    if (partOfSpeech === 'verb') return '🏃';
+    if (partOfSpeech === 'adjective') return '🎨';
+    if (partOfSpeech === 'adverb') return '⏩';
+    return '📖';
+}
+
 // === CONJUGATION HELPERS ===
 const IRREGULAR_VERBS = {
     'be': { past: 'was/were', participle: 'been', third: 'is', gerund: 'being' },
@@ -298,6 +509,7 @@ let lastSearchedWord = null;
 let lastSearchData = null;
 let lastTranslation = null;
 let lastSynonyms = [];
+let lastImageUrl = null;
 
 async function searchWord(word) {
     if (!word.trim()) return;
@@ -305,11 +517,12 @@ async function searchWord(word) {
     resultsContainer.innerHTML = '<div class="loading">Buscando...</div>';
     
     try {
-        // Llamadas en paralelo: diccionario + traducción principal + sinónimos en inglés
-        const [dictRes, transRes, synRes] = await Promise.allSettled([
+        // Llamadas en paralelo: diccionario + traducción + sinónimos + imagen Wikipedia
+        const [dictRes, transRes, synRes, wikiRes] = await Promise.allSettled([
             fetch(`https://api.dictionaryapi.dev/api/v2/entries/en/${encodeURIComponent(word.trim().toLowerCase())}`),
             fetch(`https://api.mymemory.translated.net/get?q=${encodeURIComponent(word.trim())}&langpair=en|es`),
-            fetch(`https://api.datamuse.com/words?rel_syn=${encodeURIComponent(word.trim().toLowerCase())}&max=5`)
+            fetch(`https://api.datamuse.com/words?rel_syn=${encodeURIComponent(word.trim().toLowerCase())}&max=5`),
+            fetch(`https://en.wikipedia.org/api/rest_v1/page/summary/${encodeURIComponent(word.trim().toLowerCase())}`)
         ]);
         
         if (dictRes.status !== 'fulfilled' || !dictRes.value.ok) {
@@ -378,7 +591,18 @@ async function searchWord(word) {
         
         lastTranslation = uniqueTranslations.join(', ');
         
-        renderResults(data, lastTranslation);
+        // 3. Procesar imagen de Wikipedia
+        lastImageUrl = null;
+        if (wikiRes.status === 'fulfilled' && wikiRes.value.ok) {
+            try {
+                const wikiData = await wikiRes.value.json();
+                if (wikiData.thumbnail?.source) {
+                    lastImageUrl = wikiData.thumbnail.source;
+                }
+            } catch (e) {}
+        }
+        
+        renderResults(data, lastTranslation, lastImageUrl);
     } catch (err) {
         resultsContainer.innerHTML = `
             <div class="error-card">
@@ -389,7 +613,7 @@ async function searchWord(word) {
     }
 }
 
-function renderResults(data, translation = '') {
+function renderResults(data, translation = '', imageUrl = null) {
     const entry = data[0];
     let html = '';
     
@@ -399,6 +623,17 @@ function renderResults(data, translation = '') {
     html += `<div class="word-card">`;
     html += `<h2>${entry.word}</h2>`;
     if (phonetic) html += `<div class="phonetic">${phonetic} ${audio ? `<button onclick="playAudio('${audio}')" style="background:none;border:none;font-size:18px;cursor:pointer;">🔊</button>` : ''}</div>`;
+    
+    // Mostrar imagen de Wikipedia o emoji
+    if (imageUrl) {
+        html += `<div style="text-align:center; margin-bottom:12px;">`;
+        html += `<img src="${imageUrl}" alt="${entry.word}" style="max-width:100%; max-height:200px; border-radius:12px; object-fit:cover;">`;
+        html += `</div>`;
+    } else {
+        const firstPos = entry.meanings[0]?.partOfSpeech || '';
+        const emoji = getEmojiForWord(entry.word, firstPos);
+        html += `<div style="text-align:center; margin-bottom:12px; font-size:80px; line-height:1;">${emoji}</div>`;
+    }
     
     // Mostrar traducción editable
     html += `<div class="translation-box">`;
@@ -489,6 +724,7 @@ function openAddToGroup(word) {
         word: data.word,
         translation: data.translation,
         definition: data.definition,
+        image: data.image,
         date: new Date().toISOString()
     };
     
@@ -518,7 +754,7 @@ function getWordData(word) {
         }
     }
     
-    return { word, definition, translation };
+    return { word, definition, translation, image: lastImageUrl };
 }
 
 function renderAddGroupList() {
@@ -560,6 +796,7 @@ function addWordToGroup(groupIndex) {
         return;
     }
     
+    // Guardar directamente, la imagen de Wikipedia ya viene en pendingWord si la encontró
     group.words.push(pendingWord);
     saveData(appData);
     modalAdd.classList.remove('active');
@@ -652,6 +889,98 @@ document.getElementById('new-group-name').addEventListener('keypress', (e) => {
     if (e.key === 'Enter') document.getElementById('btn-create-group').click();
 });
 
+// === IMAGE HELPERS ===
+function resizeImage(file, maxWidth = 400, maxHeight = 400, quality = 0.7) {
+    return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+            const img = new Image();
+            img.onload = () => {
+                let w = img.width;
+                let h = img.height;
+                if (w > h) {
+                    if (w > maxWidth) { h *= maxWidth / w; w = maxWidth; }
+                } else {
+                    if (h > maxHeight) { w *= maxHeight / h; h = maxHeight; }
+                }
+                const canvas = document.createElement('canvas');
+                canvas.width = w;
+                canvas.height = h;
+                const ctx = canvas.getContext('2d');
+                ctx.drawImage(img, 0, 0, w, h);
+                resolve(canvas.toDataURL('image/jpeg', quality));
+            };
+            img.onerror = reject;
+            img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+    });
+}
+
+// === IMAGE MODAL ===
+const modalImage = document.getElementById('modal-image');
+const imageFileInput = document.getElementById('image-file');
+const imagePreviewContainer = document.getElementById('image-preview-container');
+let imageTargetWord = null; // { groupIndex, wordIndex }
+
+function openImageModal(groupIdx, wordIdx) {
+    imageTargetWord = { groupIdx, wordIdx };
+    
+    const title = document.getElementById('image-modal-title');
+    const btnRemove = document.getElementById('btn-remove-image');
+    
+    title.textContent = '📷 Cambiar imagen';
+    const existingImage = appData.groups[groupIdx].words[wordIdx].image;
+    
+    if (existingImage) {
+        imagePreviewContainer.innerHTML = `<img src="${existingImage}" style="max-width:100%; max-height:200px; border-radius:12px;">`;
+        btnRemove.style.display = 'block';
+    } else {
+        const word = appData.groups[groupIdx].words[wordIdx].word;
+        const emoji = getEmojiForWord(word, '');
+        imagePreviewContainer.innerHTML = `<div style="font-size:100px; text-align:center; padding:20px;">${emoji}</div><div style="text-align:center; color:var(--text-secondary); font-size:14px;">Emoji automático</div>`;
+        btnRemove.style.display = 'none';
+    }
+    
+    modalImage.classList.add('active');
+}
+
+document.getElementById('btn-select-image').addEventListener('click', () => {
+    imageFileInput.click();
+});
+
+imageFileInput.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    try {
+        const resized = await resizeImage(file, 400, 400, 0.7);
+        imagePreviewContainer.innerHTML = `<img src="${resized}" style="max-width:100%; max-height:200px; border-radius:12px;">`;
+        document.getElementById('btn-remove-image').style.display = 'block';
+        
+        appData.groups[imageTargetWord.groupIdx].words[imageTargetWord.wordIdx].image = resized;
+        saveData(appData);
+        renderWordsList();
+    } catch (err) {
+        alert('❌ Error al procesar la imagen');
+    }
+    imageFileInput.value = '';
+});
+
+document.getElementById('btn-remove-image').addEventListener('click', () => {
+    delete appData.groups[imageTargetWord.groupIdx].words[imageTargetWord.wordIdx].image;
+    saveData(appData);
+    renderWordsList();
+    imagePreviewContainer.innerHTML = '';
+    document.getElementById('btn-remove-image').style.display = 'none';
+});
+
+document.getElementById('btn-cancel-image').addEventListener('click', () => {
+    modalImage.classList.remove('active');
+    imageTargetWord = null;
+});
+
 // === GROUP DETAIL ===
 let currentGroupIndex = null;
 
@@ -691,15 +1020,26 @@ function renderWordsList() {
         }
         
         const subText = word.definition ? `<div style="font-size:12px; color:var(--text-secondary); margin-top:6px; font-style:italic; line-height:1.4;">${word.definition}</div>` : '';
+        const thumb = word.image 
+            ? `<img src="${word.image}" class="word-thumb">` 
+            : `<div class="word-thumb" style="display:flex; align-items:center; justify-content:center; font-size:30px; background:var(--bg);">${getEmojiForWord(word.word, '')}</div>`;
         
         item.innerHTML = `
+            ${thumb}
             <div style="flex:1; min-width:0;">
                 <div class="word-text">${word.word}</div>
                 ${transHtml ? `<div style="margin-top:4px;">${transHtml}</div>` : ''}
                 ${subText}
             </div>
-            <button class="btn-delete">🗑</button>
+            <div class="word-actions">
+                <button class="btn-image" title="Imagen">📷</button>
+                <button class="btn-delete">🗑</button>
+            </div>
         `;
+        item.querySelector('.btn-image').addEventListener('click', (e) => {
+            e.stopPropagation();
+            openImageModal(currentGroupIndex, idx);
+        });
         item.querySelector('.btn-delete').addEventListener('click', (e) => {
             e.stopPropagation();
             deleteWord(idx);
@@ -719,18 +1059,80 @@ document.getElementById('btn-back-from-group').addEventListener('click', () => {
     showScreen('screen-groups');
 });
 
-document.getElementById('btn-study-group').addEventListener('click', () => {
+// === GROUP OPTIONS ===
+const modalGroupOptions = document.getElementById('modal-group-options');
+const modalRenameGroup = document.getElementById('modal-rename-group');
+
+document.getElementById('btn-group-menu').addEventListener('click', () => {
+    modalGroupOptions.classList.add('active');
+});
+
+document.getElementById('btn-cancel-group-options').addEventListener('click', () => {
+    modalGroupOptions.classList.remove('active');
+});
+
+// Renombrar grupo
+document.getElementById('btn-rename-group').addEventListener('click', () => {
+    modalGroupOptions.classList.remove('active');
     const group = appData.groups[currentGroupIndex];
-    if (group.words.length === 0) {
-        alert('Este grupo está vacío. Agrega palabras primero.');
+    document.getElementById('rename-group-input').value = group.name;
+    modalRenameGroup.classList.add('active');
+    setTimeout(() => document.getElementById('rename-group-input').focus(), 100);
+});
+
+document.getElementById('btn-cancel-rename').addEventListener('click', () => {
+    modalRenameGroup.classList.remove('active');
+});
+
+document.getElementById('btn-confirm-rename').addEventListener('click', () => {
+    const newName = document.getElementById('rename-group-input').value.trim();
+    if (!newName) return;
+    
+    appData.groups[currentGroupIndex].name = newName;
+    saveData(appData);
+    document.getElementById('group-detail-title').textContent = newName;
+    modalRenameGroup.classList.remove('active');
+    renderGroups();
+});
+
+document.getElementById('rename-group-input').addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') document.getElementById('btn-confirm-rename').click();
+});
+
+// Eliminar grupo
+document.getElementById('btn-delete-group').addEventListener('click', () => {
+    modalGroupOptions.classList.remove('active');
+    const group = appData.groups[currentGroupIndex];
+    if (!confirm(`¿Eliminar el grupo "${group.name}"?\n\nSe borrarán ${group.words.length} palabra(s). Esta acción no se puede deshacer.`)) {
         return;
     }
-    startFlashcards();
+    
+    appData.groups.splice(currentGroupIndex, 1);
+    saveData(appData);
+    showScreen('screen-groups');
+    renderGroups();
 });
 
 // === FLASHCARDS ===
 let flashcardsQueue = [];
 let currentCardIndex = 0;
+let flashcardMode = 'study'; // 'study' or 'test'
+
+function enterFlashcards(mode) {
+    const group = appData.groups[currentGroupIndex];
+    if (group.words.length === 0) {
+        alert('Este grupo está vacío. Agrega palabras primero.');
+        return;
+    }
+    flashcardMode = mode;
+    // Actualizar botones en el header del grupo
+    document.getElementById('btn-study-mode').classList.toggle('active', mode === 'study');
+    document.getElementById('btn-test-mode').classList.toggle('active', mode === 'test');
+    startFlashcards();
+}
+
+document.getElementById('btn-study-mode').addEventListener('click', () => enterFlashcards('study'));
+document.getElementById('btn-test-mode').addEventListener('click', () => enterFlashcards('test'));
 
 function startFlashcards() {
     const group = appData.groups[currentGroupIndex];
@@ -769,6 +1171,36 @@ function showCard() {
     const card = flashcardsQueue[currentCardIndex];
     document.getElementById('flashcard-word').textContent = card.word;
     document.getElementById('flashcard-translation').textContent = 'Toca para ver traducción';
+    
+    // Mostrar imagen o emoji según modo
+    const frontImageContainer = document.getElementById('flashcard-image-front');
+    const backImageContainer = document.getElementById('flashcard-image-back');
+    const emoji = getEmojiForWord(card.word, '');
+    const emojiHtml = `<div style="font-size:80px; line-height:1; text-align:center;">${emoji}</div>`;
+    
+    if (card.image) {
+        const imgHtml = `<img src="${card.image}" alt="${card.word}">`;
+        if (flashcardMode === 'study') {
+            frontImageContainer.style.display = 'flex';
+            frontImageContainer.innerHTML = imgHtml;
+            backImageContainer.innerHTML = imgHtml;
+        } else {
+            frontImageContainer.style.display = 'none';
+            frontImageContainer.innerHTML = '';
+            backImageContainer.innerHTML = imgHtml;
+        }
+    } else {
+        // Sin imagen: mostrar emoji
+        if (flashcardMode === 'study') {
+            frontImageContainer.style.display = 'flex';
+            frontImageContainer.innerHTML = emojiHtml;
+            backImageContainer.innerHTML = emojiHtml;
+        } else {
+            frontImageContainer.style.display = 'none';
+            frontImageContainer.innerHTML = '';
+            backImageContainer.innerHTML = emojiHtml;
+        }
+    }
     
     // Preparar contenido del reverso
     let backContent = '';

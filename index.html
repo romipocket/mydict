@@ -7,9 +7,9 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="theme-color" content="#007AFF">
     <title>MyDict - Diccionario & Flashcards</title>
-    <link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="manifest.json?v=7">
     <link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect fill='%23007AFF' width='180' height='180' rx='36'/%3E%3Ctext x='90' y='115' font-size='80' text-anchor='middle' fill='white'%3E📘%3C/text%3E%3C/svg%3E">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css?v=7">
 </head>
 <body>
     <div id="app">
@@ -57,7 +57,11 @@
             <header class="app-header">
                 <button class="btn-back" id="btn-back-from-group">←</button>
                 <h1 id="group-detail-title">Grupo</h1>
-                <button class="btn-icon" id="btn-study-group">📖</button>
+                <div class="group-actions">
+                    <button class="group-action-btn active" id="btn-study-mode">📖 Estudio</button>
+                    <button class="group-action-btn" id="btn-test-mode">🎯 Prueba</button>
+                    <button class="btn-icon" id="btn-group-menu" style="font-size:20px; margin-left:4px;">⋮</button>
+                </div>
             </header>
             <div class="words-list" id="words-list"></div>
         </div>
@@ -78,9 +82,11 @@
                     <div class="flashcard-inner">
                         <div class="flashcard-front">
                             <div class="flashcard-word" id="flashcard-word">Word</div>
+                            <div class="flashcard-image" id="flashcard-image-front"></div>
                             <div class="flashcard-hint">Toca para ver significado</div>
                         </div>
                         <div class="flashcard-back">
+                            <div class="flashcard-image" id="flashcard-image-back"></div>
                             <div class="flashcard-definition" id="flashcard-definition">Definición</div>
                             <div class="flashcard-translation" id="flashcard-translation">Traducción</div>
                         </div>
@@ -105,6 +111,43 @@
                 <h3>Guardar en grupo</h3>
                 <div id="add-group-list" class="add-group-list"></div>
                 <button class="btn-secondary btn-full" id="btn-cancel-add">Cancelar</button>
+            </div>
+        </div>
+
+        <!-- Modal para Agregar Imagen -->
+        <div class="modal" id="modal-image">
+            <div class="modal-content">
+                <h3 id="image-modal-title">📷 Agregar imagen</h3>
+                <p style="font-size:14px; color:var(--text-secondary); margin-bottom:16px; text-align:center;">Una imagen ayuda a recordar la palabra.</p>
+                <div id="image-preview-container" style="text-align:center; margin-bottom:16px;"></div>
+                <button class="btn-backup btn-export" id="btn-select-image">📷 Seleccionar imagen</button>
+                <button class="btn-secondary btn-full" id="btn-remove-image" style="display:none; margin-top:8px;">🗑 Quitar imagen</button>
+                <button class="btn-secondary btn-full" id="btn-cancel-image" style="margin-top:8px;">Cerrar</button>
+                <input type="file" id="image-file" accept="image/*" style="display:none;">
+            </div>
+        </div>
+
+        <!-- Modal Opciones de Grupo -->
+        <div class="modal" id="modal-group-options">
+            <div class="modal-content">
+                <h3>Opciones del grupo</h3>
+                <div class="group-options-list">
+                    <button class="group-option-btn" id="btn-rename-group">✏️ Renombrar grupo</button>
+                    <button class="group-option-btn danger" id="btn-delete-group">🗑️ Eliminar grupo</button>
+                </div>
+                <button class="btn-secondary btn-full" id="btn-cancel-group-options" style="margin-top:8px;">Cancelar</button>
+            </div>
+        </div>
+
+        <!-- Modal Renombrar Grupo -->
+        <div class="modal" id="modal-rename-group">
+            <div class="modal-content">
+                <h3>Renombrar grupo</h3>
+                <input type="text" id="rename-group-input" placeholder="Nuevo nombre">
+                <div class="modal-buttons">
+                    <button class="btn-secondary" id="btn-cancel-rename">Cancelar</button>
+                    <button class="btn-primary" id="btn-confirm-rename">Guardar</button>
+                </div>
             </div>
         </div>
 
@@ -135,6 +178,6 @@
         </nav>
     </div>
 
-    <script src="app.js"></script>
+    <script src="app.js?v=7"></script>
 </body>
 </html>
